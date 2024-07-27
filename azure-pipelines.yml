@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  vmImage: 'macos-latest'  # Hoặc 'ubuntu-latest' cho Android
+  vmImage: 'ubuntu-latest'  # Sử dụng ubuntu nếu bạn muốn build cho Android
 
 variables:
   buildConfiguration: 'Release'
@@ -23,10 +23,9 @@ steps:
     yarn install
   displayName: 'Install Dependencies'
 
-
-
 - script: |
-    yarn android  # Hoặc yarn ios nếu bạn đang build cho iOS
+    chmod +x ./android/gradlew  # Cấp quyền thực thi cho gradlew
+    yarn android
   displayName: 'Build React Native Project'
 
 - task: CopyFiles@2
