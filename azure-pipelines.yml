@@ -23,6 +23,27 @@ steps:
     yarn install
   displayName: 'Install Dependencies'
 
+
+# azure-pipelines.yml
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UseAndroidSdk@1
+  inputs:
+    versionSpec: '30.x'
+
+- script: |
+    sdkmanager --update
+    sdkmanager "system-images;android-30;google_apis;x86"
+    sdkmanager "platform-tools"
+    sdkmanager "platforms;android-30"
+    echo no | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86" --device "pixel"
+    emulator -avd test -no-skin -no-audio -no-boot-anim &
+    adb wait-for-device
+    adb shell input keyevent 82
+  displayName: 'Set up Android Emulator'
+
 - script: |
     chmod +x ./android/gradlew  # Cấp quyền thực thi cho gradlew
     yarn android
